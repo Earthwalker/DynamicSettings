@@ -1,4 +1,4 @@
-﻿namespace DynamicSettings
+﻿namespace Ini
 {
     class IniKey
     {

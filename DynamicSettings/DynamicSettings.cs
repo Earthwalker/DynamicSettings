@@ -9,7 +9,7 @@ namespace DynamicSettings
     /// 
     /// Attached to GameManager
     /// </summary>
-    public class DynamicSettings
+    public class SettingsManager
     { 
         List<Setting> settingsList = new List<Setting>();
 
