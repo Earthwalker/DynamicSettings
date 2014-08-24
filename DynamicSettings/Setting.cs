@@ -34,19 +34,25 @@ namespace DynamicSettings
                 section = "";
         }
 
-        public dynamic GetValue()
+        public bool GetValueAsBool()
         {
-            switch (name[0])
-            {
-                case 'b':
-                    return bool.Parse(value);
-                case 'i':
-                    return int.Parse(value);
-                case 's':
-                    return value;
-                default:
-                    return value;
-            }
+            bool result;
+            bool.TryParse(value, out result);
+
+            return result;
+        }
+
+        public int GetValueAsInt()
+        {
+            int result;
+            int.TryParse(value, out result);
+
+            return result;
+        }
+
+        public string GetValueAsString()
+        {
+            return value;
         }
     }
 }
