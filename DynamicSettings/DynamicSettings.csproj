@@ -39,7 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DynamicSettings.cs" />
+    <Compile Include="SettingsManager.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="IniKey.cs" />
     <Compile Include="IniSection.cs" />
