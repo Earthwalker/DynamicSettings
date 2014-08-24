@@ -22,7 +22,7 @@ namespace Ini
                         if (line[0] == '[')
                         {
                             section = line.Remove(0, 1).Split(']')[0];
-                            AddSection(new IniSection(section));
+                            AddSection(section);
                         }
 
                         if (line[0] != ';')
