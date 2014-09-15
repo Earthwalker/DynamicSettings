@@ -52,16 +52,28 @@ namespace Ini
                     string line;
                     string section = "";
 
-                    while ((line = reader.ReadLine()) != null)
+                    while (!reader.EndOfStream)
                     {
-                        if(line[0] == '[')
-                        {
-                            section = line.Remove(0, 1).Split(']')[0];
-							AddSection(section);
-                        }
+                        line = reader.ReadLine();
 
-                        if(line[0] != ';')
-                            this[section].AddKey(new IniKey(line.Split(new char[]{'=', ';'})));
+                        if (!string.IsNullOrEmpty(line))
+                        {
+                            if (line[0] == '[')
+                            {
+                                section = line.Remove(0, 1).Split(']')[0];
+                                AddSection(section);
+                            }
+                            else
+                            {
+                                if (line[0] != ';')
+                                {
+                                    string[] stringArray = line.Split(new char[] { '=', ';' });
+
+                                    if (stringArray.Length > 0)
+                                        this[section].AddKey(new IniKey(stringArray));
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -81,8 +93,12 @@ namespace Ini
                 {
                     foreach (IniSection section in _sectionList)
                     {
+                        writer.WriteLine("[" + section.name + "]");
+
                         for (int i = 0; i < section.ToArray().Length; i++)
                             writer.WriteLine(section.ToArray()[i]);
+
+                        writer.WriteLine();
                     }
 
                     return writer.ToString();
@@ -102,8 +118,12 @@ namespace Ini
                 {
                     foreach(IniSection section in _sectionList)
                     {
+                        writer.WriteLine("[" + section.name + "]");
+
                         for (int i = 0; i < section.ToArray().Length; i++)
                             writer.WriteLine(section.ToArray()[i]);
+
+                        writer.WriteLine();
                     }
 
                     writer.Close();

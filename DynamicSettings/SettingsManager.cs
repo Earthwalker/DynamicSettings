@@ -75,13 +75,24 @@ namespace DynamicSettings
         /// <param name="newSetting"></param>
         public void ModifySetting(Setting newSetting)
         {
-            Setting setting = settingsList.Find(item => item.Equals(newSetting));
+            Setting setting = settingsList.Find(item => item.name == newSetting.name);
 
-            //if the setting already exists, their names should match
-            if (setting.Equals(newSetting))
-                setting = newSetting;
-            else
+            if (setting == null)
                 settingsList.Add(newSetting);
+            else
+            {
+                if (newSetting.value != "")
+                    setting.value = newSetting.value;
+                if (newSetting.comment != "")
+                    setting.comment = newSetting.comment;
+                if (newSetting.section != "")
+                    setting.section = newSetting.section;
+            }
+        }
+
+        public List<Setting> GetSettingsList()
+        {
+            return settingsList;
         }
     }
 }

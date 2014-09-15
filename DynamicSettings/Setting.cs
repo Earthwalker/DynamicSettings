@@ -33,26 +33,5 @@ namespace DynamicSettings
             else
                 section = "";
         }
-
-        public bool GetValueAsBool()
-        {
-            bool result;
-            bool.TryParse(value, out result);
-
-            return result;
-        }
-
-        public int GetValueAsInt()
-        {
-            int result;
-            int.TryParse(value, out result);
-
-            return result;
-        }
-
-        public string GetValueAsString()
-        {
-            return value;
-        }
     }
 }
