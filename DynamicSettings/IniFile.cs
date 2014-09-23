@@ -1,22 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Diagnostics;
 
 namespace Ini
 {
+    /// <summary>
+    /// Holds the data of an .ini file
+    /// </summary>
     class IniFile
     {
+        /// <summary>
+        /// List of the sections in the file
+        /// </summary>
         List<IniSection> _sectionList = new List<IniSection>();
 
+        /// <summary>
+        /// Load data from a string
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns>Whether loading was successful</returns>
         public bool LoadFromString(string str)
         {
             try
             {
+                //create a StringReader to read the data
                 using (StringReader reader = new StringReader(str))
                 {
                     string line;
                     string section = "";
 
+                    //read until the end
                     while ((line = reader.ReadLine()) != null)
                     {
                         if (line[0] == '[')
@@ -32,21 +46,30 @@ namespace Ini
                     reader.Close();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                //log the exception
+                Trace.WriteLine(e.ToString());
                 return false;
             }
 
             return true;
         }
 
+        /// <summary>
+        /// Load data from a file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns>Whether loading was successful</returns>
         public bool LoadFromFile(string path)
         {
+            //check if the file exists
             if (!File.Exists(path))
                 return false;
 
             try
             {
+                //create a StreamReader to read the data
                 using(StreamReader reader = new StreamReader(path))
                 {
                     string line;
@@ -77,14 +100,20 @@ namespace Ini
                     }
                 }
             }
-            catch(Exception)
+            catch (Exception e)
             {
+                //log the exception
+                Trace.WriteLine(e.ToString());
                 return false;
             }
 
             return true;
         }
 
+        /// <summary>
+        /// Saves data to a string
+        /// </summary>
+        /// <returns>Data string</returns>
         public string SaveToString()
         {
             try
@@ -104,12 +133,18 @@ namespace Ini
                     return writer.ToString();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                //log the exception
+                Trace.WriteLine(e.ToString());
                 return "";
             }
         }
 
+        /// <summary>
+        /// Saves data to a file
+        /// </summary>
+        /// <param name="path"></param>
         public void SaveToFile(string path)
         {
             try
@@ -129,14 +164,22 @@ namespace Ini
                     writer.Close();
                 }
             }
-            catch(Exception)
+            catch(Exception e)
             {
+                //log the exception
+                Trace.WriteLine(e.ToString());
                 return;
             }
         }
 
+        /// <summary>
+        /// Adds a new section
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Whether a new section was added</returns>
         public bool AddSection(string name)
         {
+            //check if a section of the same name already exists
             if (!SectionExists(name))
             {
                 _sectionList.Add(new IniSection(name));
@@ -146,11 +189,21 @@ namespace Ini
                 return false;
         }
 
+        /// <summary>
+        /// Removes a section
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Whether the section was removed</returns>
         public bool RemoveSection(string name)
         {
             return _sectionList.Remove(_sectionList.Find(section => section.name == name));
         }
 
+        /// <summary>
+        /// Checks if a section exists
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns>Whether the section exists</returns>
         public bool SectionExists(string name)
         {
             return _sectionList.Find(section => section.name == name) != null;
@@ -180,6 +233,12 @@ namespace Ini
             }
         }
 
+        /// <summary>
+        /// Gets a key
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="section"></param>
+        /// <returns>The key found</returns>
         public IniKey GetKey(string name, string section="")
         {
             if (section != "")
@@ -196,6 +255,10 @@ namespace Ini
             return null;
         }
 
+        /// <summary>
+        /// Gets an array of the sections
+        /// </summary>
+        /// <returns>Array of sections</returns>
         public IniSection[] GetSections()
         {
             return _sectionList.ToArray();
