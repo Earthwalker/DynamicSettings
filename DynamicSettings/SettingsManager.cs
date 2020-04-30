@@ -90,9 +90,14 @@ namespace DynamicSettings
             }
         }
 
-        public List<Setting> GetSettingsList()
+        public List<Setting> GetSettings()
         {
             return settingsList;
+        }
+
+        public List<Setting> GetSettings(string section)
+        {
+            return settingsList.FindAll(s => string.CompareOrdinal(s.section, section) == 0);
         }
     }
 }
