@@ -2,14 +2,30 @@
 
 namespace Ini
 {
-    class IniSection
+    internal class IniSection
     {
-        string _name;
-        List<IniKey> _keyList = new List<IniKey>();
+        private readonly List<IniKey> _keyList = new List<IniKey>();
+
+        public string Name { get; }
+
+        public IniKey[] Keys => _keyList.ToArray();
+
+        public string[] ToArray
+        {
+            get
+            {
+                string[] array = new string[_keyList.Count];
+
+                for (int i = 0; i < array.Length; i++)
+                    array[i] = _keyList[i].ToFormattedString;
+
+                return array;
+            }
+        }
 
         public IniSection(string name)
         {
-            _name = name;
+            Name = name;
         }
 
         public void AddKey(string name)
@@ -19,7 +35,7 @@ namespace Ini
 
         public bool AddKey(IniKey key)
         {
-            if (!KeyExists(key.name))
+            if (!KeyExists(key.Name))
             {
                 _keyList.Add(key);
                 return true;
@@ -30,7 +46,7 @@ namespace Ini
 
         public bool RemoveKey(string name)
         {
-            return _keyList.Remove(_keyList.Find(key => key.name == name));
+            return _keyList.Remove(_keyList.Find(key => string.CompareOrdinal(key.Name, name) == 0));
         }
 
         public bool RemoveKey(IniKey key)
@@ -40,54 +56,19 @@ namespace Ini
 
         public bool KeyExists(string name)
         {
-            return _keyList.Find(key => key.name == name) != null;
+            return _keyList.Find(key => string.CompareOrdinal(key.Name, name) == 0) != null;
         }
 
         public IniKey this[int ind]
         {
-            get
-            {
-                return _keyList[ind];
-            }
-            set
-            {
-                _keyList[ind] = value;
-            }
+            get => _keyList[ind];
+            set => _keyList[ind] = value;
         }
 
         public IniKey this[string name]
         {
-            get
-            {
-                return _keyList.Find(key => key.name == name);
-            }
-            set
-            {
-                _keyList[_keyList.FindIndex(key => key.name == name)] = value;
-            }
-        }
-
-        public string name
-        {
-            get
-            {
-                return _name;
-            }
-        }
-
-        public IniKey[] GetKeys()
-        {
-            return _keyList.ToArray();
-        }
-        
-        public string[] ToArray()
-        {
-            string[] array = new string[_keyList.Count];
-
-            for (int i = 0; i < array.Length; i++)
-                array[i] = _keyList[i].ToFormattedString();
-
-            return array;
+            get => _keyList.Find(key => string.CompareOrdinal(key.Name, name) == 0);
+            set => _keyList[_keyList.FindIndex(key => string.CompareOrdinal(key.Name, name) == 0)] = value;
         }
     }
 }

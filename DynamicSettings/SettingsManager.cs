@@ -1,18 +1,14 @@
-﻿using System;
-using System.IO;
+﻿using Ini;
 using System.Collections.Generic;
-using Ini;
 
 namespace DynamicSettings
 {
     /// <summary>
-    /// Configuration settings that are loaded from a file and can be accessed by others
-    /// 
-    /// Attached to GameManager
+    /// Configuration settings that are loaded from a file and can be accessed by others.
     /// </summary>
     public class SettingsManager
-    { 
-        List<Setting> settingsList = new List<Setting>();
+    {
+        private readonly List<Setting> settingsList = new List<Setting>();
 
         /// <summary>
         /// Loads from an ini
@@ -21,16 +17,18 @@ namespace DynamicSettings
         /// <returns></returns>
         public bool LoadFromIni(string path)
         {
-            IniFile iniFile = new IniFile();
+            var iniFile = new IniFile();
 
             if (iniFile.LoadFromFile(path))
             {
-                foreach(IniSection section in iniFile.GetSections())
+                foreach (var section in iniFile.Sections)
                 {
-                    foreach(IniKey key in section.GetKeys())
+                    foreach (var key in section.Keys)
                     {
-                        List<string> list = new List<string>(key.ToArray());
-                        list.Add(section.name);
+                        var list = new List<string>(key.ToArray)
+                        {
+                            section.Name
+                        };
 
                         settingsList.Add(new Setting(list.ToArray()));
                     }
@@ -48,12 +46,12 @@ namespace DynamicSettings
         /// <param name="path"></param>
         public void SaveToIni(string path)
         {
-            IniFile iniFile = new IniFile();
+            var iniFile = new IniFile();
 
-            foreach(Setting setting in settingsList)
+            foreach (var setting in settingsList)
             {
-                iniFile.AddSection(setting.section);
-                iniFile[setting.section].AddKey(new IniKey(setting.name, setting.value, setting.comment));
+                iniFile.AddSection(setting.Section);
+                iniFile[setting.Section].AddKey(new IniKey(setting.Name, setting.Value, setting.Comment));
             }
 
             iniFile.SaveToFile(path);
@@ -66,7 +64,7 @@ namespace DynamicSettings
         /// <returns>The setting if it exists, otherwise, an empty setting</returns>
         public Setting GetSetting(string name)
         {
-            return settingsList.Find(setting => setting.name == name);
+            return settingsList.Find(setting => string.CompareOrdinal(setting.Name, name) == 0);
         }
 
         /// <summary>
@@ -75,18 +73,18 @@ namespace DynamicSettings
         /// <param name="newSetting"></param>
         public void ModifySetting(Setting newSetting)
         {
-            Setting setting = settingsList.Find(item => item.name == newSetting.name);
+            var setting = settingsList.Find(item => string.CompareOrdinal(item.Name, newSetting.Name) == 0);
 
             if (setting == null)
                 settingsList.Add(newSetting);
             else
             {
-                if (newSetting.value != "")
-                    setting.value = newSetting.value;
-                if (newSetting.comment != "")
-                    setting.comment = newSetting.comment;
-                if (newSetting.section != "")
-                    setting.section = newSetting.section;
+                if (!string.IsNullOrEmpty(newSetting.Value))
+                    setting.Value = newSetting.Value;
+                if (!string.IsNullOrEmpty(newSetting.Comment))
+                    setting.Comment = newSetting.Comment;
+                if (!string.IsNullOrEmpty(newSetting.Section))
+                    setting.Section = newSetting.Section;
             }
         }
 
@@ -97,7 +95,7 @@ namespace DynamicSettings
 
         public List<Setting> GetSettings(string section)
         {
-            return settingsList.FindAll(s => string.CompareOrdinal(s.section, section) == 0);
+            return settingsList.FindAll(s => string.CompareOrdinal(s.Section, section) == 0);
         }
     }
 }
