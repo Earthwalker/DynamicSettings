@@ -36,7 +36,7 @@
 
         public string Name { get; }
 
-        public string ToFormattedString => Name + "=" + _value + " ;" + _comment;
+        public string ToFormattedString => Name + "=" + _value + (!string.IsNullOrWhiteSpace(_comment) ? " ;" + _comment : "");
 
         public string[] ToArray => new string[] { Name, _value, _comment };
     }
