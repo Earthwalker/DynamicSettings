@@ -93,6 +93,14 @@ namespace DynamicSettings
             return settingsList;
         }
 
+        /// <summary>
+        /// Clears all the current settings.
+        /// </summary>
+        public void ClearSettings()
+        {
+            settingsList.Clear();
+        }
+
         public List<Setting> GetSettings(string section)
         {
             return settingsList.FindAll(s => string.CompareOrdinal(s.Section, section) == 0);
